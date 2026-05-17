@@ -1,7 +1,5 @@
 cd "F:\ECON 408\Practice do file"
 
-capture log close
-log using "Homework-2.log", replace text
 
 * (1) Biased ARMA(2,1) Model Simulation
 *-------------------------------------------------------------------------------
@@ -142,5 +140,3 @@ graph combine g1 g2 g3 g4, ///
 graph export ARMA_Correct.emf, name(CorrectModel) replace
 
 
-
-log close

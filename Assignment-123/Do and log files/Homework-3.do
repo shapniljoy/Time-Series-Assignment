@@ -1,7 +1,5 @@
 cd "F:\ECON 408\Practice do file"
 
-capture log close
-log using "Homework-3.log" , replace text
 
 clear all
 set seed 1000
@@ -12,8 +10,8 @@ rename t time
 tsset time
 
 
-*                             Identification
-********************************************************************************
+*                    Identification
+************************************************************
 
 *(1) Time Series plot of variable y
 //----------------------------------
@@ -77,16 +75,17 @@ estat ic
 
 
 
-*                                  Estimation 
-********************************************************************************
+*                      Estimation 
+*************************************************************
 
 arima y, ar(1/2) ma(1/3)
 estat ic
-estat aroots
+estat aroots, name(arootshw3,replace)
+graph export arootshw3.png,name(arootshw3) replace
 
 
-*                                 Diagnostic Test
-********************************************************************************
+*                    Diagnostic Test
+************************************************************
 
 
 predict res , residuals
@@ -98,11 +97,11 @@ name(res_acf_pacf_hw3, replace)
 
 graph export res_acf_pacf_hw3.png, name(res_acf_pacf_hw3) replace
 
-wntestq res
+wntestq res 
 
 
-*                              10 Days Ahead Forecast
-********************************************************************************
+*                 10 Days Ahead Forecast
+************************************************************
 
 
 keep if time <= 100
@@ -131,15 +130,15 @@ twoway (rarea ci_lower ci_upper time if time >= 100, color("gs12") lwidth(medthi
        (line y_forecast time if time >= 100, lcolor("255 68 69") lpattern(dash) lwidth(medthick)), ///
        xline(100, lcolor(gs10) lwidth(medthick) lpattern(shortdash)) ///
 	   graphregion(color(white)) ///
-       title("{bf:ARMA(2,3): Historical Data vs. Dynamic Forecast}", color("108 117 125")) ///
-       xtitle("Time Period", color("108 117 125"))  ///
-       ytitle("Value", color("108 117 125")) ///
+       title("{bf:ARMA(2,3): Historical Data vs. Dynamic Forecast}") ///
+       xtitle("Time Period")  ///
+       ytitle("Value") ///
        legend(order(2 "Actual Data" 1 "95% CI" 3 "Forecast") pos(11) ring(0) ///
-	   cols(1) color("108 117 125") ) ///
+	   cols(1)) ///
 	   ylabel(, format(%9.0f) nogrid) ///
 	   xlabel(0(25)100 110, labsize(small)) ///
 	   xsize(6.5) ysize(4) name(forecast_plot,replace)
 	   
 graph export forecast_plot.png, name(forecast_plot) replace
 
-log close 
+
