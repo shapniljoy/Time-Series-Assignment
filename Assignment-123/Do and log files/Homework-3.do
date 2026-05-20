@@ -4,6 +4,7 @@ cd "F:\ECON 408\Practice do file"
 clear all
 set seed 1000
 
+
 use "HOMEWORK 3.dta" , clear
 
 rename t time
@@ -40,7 +41,6 @@ varsoc y , maxlag(12)
 dfuller y, lags(4)
 
 
-
 *(3) ACF and PACF
 //----------------
 
@@ -54,31 +54,31 @@ graph combine acf_plot pacf_plot, name(ACF_and_PACF_hw3, replace) ///
  
 graph export ACF_and_PACF_hw3.png, name(ACF_and_PACF_hw3) replace
 
-* Assumed models: ARMA(2,3) , ARMA(3,2), ARMA(3,3), ARMA(3,4), ARMA(4,3)
+* Assumed models: AR(4), ARMA(2,3), ARMA(4,1), ARMA(4,2), ARMA(4,3)
 
-qui arima y, ar(1/2) ma(1/3)
+qui arima y, ar(1/4) 
 estat ic
 
-qui arima y, ar(1/3) ma(1/2)
+qui arima y, ar(1/2) ma(1/3) 
 estat ic
 
-qui arima y, ar(1/3) ma(1/3)
+qui arima y, ar(1/4) ma(1)
 estat ic
 
-qui arima y, ar(1/3) ma(1/4)
+qui arima y, ar(1/4) ma(1/2)
 estat ic
 
 qui arima y, ar(1/4) ma(1/3)
 estat ic
 
-* ARMA(2,3) has the lowest AIC and BIC
 
+* AR(4) has the lowest AIC and BIC
 
 
 *                      Estimation 
 *************************************************************
 
-arima y, ar(1/2) ma(1/3)
+arima y, ar(1/4)
 estat ic
 estat aroots, name(arootshw3,replace)
 graph export arootshw3.png,name(arootshw3) replace
@@ -105,7 +105,7 @@ wntestq res
 
 
 keep if time <= 100
-qui arima y, ar(1/2) ma(1/3)
+qui arima y, ar(1/4)
 tsappend, add(10)
 
 capture drop y_forecast y_mse y_se ci_lower ci_upper
@@ -128,9 +128,10 @@ set scheme white_tableau
 twoway (rarea ci_lower ci_upper time if time >= 100, color("gs12") lwidth(medthick)) ///
        (line y time if time <= 100 & time >= 1, lcolor("33 37 41") lwidth(medthin)) ///
        (line y_forecast time if time >= 100, lcolor("255 68 69") lpattern(dash) lwidth(medthick)), ///
-       xline(100, lcolor(gs10) lwidth(medthick) lpattern(shortdash)) ///
+       xline(100, lcolor(gs10) lwidth(medthick) lpattern(shortdash)) /// 
+	   yline(0, lcolor(gs10) lwidth(medthick) lpattern(shortdash)) ///
 	   graphregion(color(white)) ///
-       title("{bf:ARMA(2,3): Historical Data vs. Dynamic Forecast}") ///
+       title("{bf:AR(4): Historical Data vs. Dynamic Forecast}") ///
        xtitle("Time Period")  ///
        ytitle("Value") ///
        legend(order(2 "Actual Data" 1 "95% CI" 3 "Forecast") pos(11) ring(0) ///
