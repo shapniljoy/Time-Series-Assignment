@@ -39,7 +39,7 @@ histogram r2, ///
     fcolor(ebblue%70) /// 
     lcolor(white) lwidth(vthin) ///
     normal ///
-	normopts(lcolor(maroon%70)) ///
+	normopts(lcolor(pink)) ///
     title("Spurious Regression: R-squared Distribution", color(black) size(medlarge)) ///
     xtitle("Estimated R-squared") ///
     ytitle("Density") 
