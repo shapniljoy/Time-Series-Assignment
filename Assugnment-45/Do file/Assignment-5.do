@@ -6,7 +6,7 @@ set more off
 set seed 10
 	
 drop _all
-set obs 500
+set obs 100
 gen t = _n
 tsset t
 
@@ -15,13 +15,17 @@ forvalues i = 1/500 {
 			gen double y_`i' = sum(u_`i') 
 }
 			
+			
 gen t_stat = .
 gen r2 = .
- 
+tsappend , add(400)
+
 forvalues i = 2/500 {
-	quietly reg y_1 y_`i'
+	quietly {
+	reg y_1 y_`i'
 	replace t_stat =  _b[y_`i'] / _se[y_`i'] in `i'
-	replace r2 = e(r2) in `i'
+	replace r2 = e(r2) in `i' 
+	}
 }
 
 gen reject = (abs(t_stat) > 1.96)
@@ -44,13 +48,12 @@ histogram r2, ///
     xtitle("Estimated R-squared") ///
     ytitle("Density") 
 
-
 	
 twoway ///
     (kdensity t_stat,  recast(area) fcolor(ebblue%70) lcolor(white) lwidth(medthick)) ///
-    (function y = normalden(x), range(-15 15) lcolor(red) lwidth(medthick) lpattern(dash)), ///
+    (function y = normalden(x), range(-10 10) lcolor(red) lwidth(medthick) lpattern(dash)), ///
     title("Spurious Regression t-statistic Distribution") ///
-    subtitle("500 Independent Random Walks (T=500)") ///
+    subtitle("500 Independent Random Walks (T=100)") ///
     xtitle("OLS t-statistic for Beta") ///
     ytitle("Density") ///
     legend(order(1 "Simulated t-stat" 2 "Standard Normal") col(1) pos(2) ring(0)) ///
