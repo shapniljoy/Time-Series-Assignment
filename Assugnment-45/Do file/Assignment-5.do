@@ -46,7 +46,9 @@ histogram r2, ///
 	normopts(lcolor(pink)) ///
     title("Spurious Regression: R-squared Distribution", color(black) size(medlarge)) ///
     xtitle("Estimated R-squared") ///
-    ytitle("Density") 
+    ytitle("Density") name(histogram_hw5 , replace)
+	
+graph export histogram_hw5.png, name(histogram_hw5) replace
 
 	
 twoway ///
@@ -57,5 +59,9 @@ twoway ///
     xtitle("OLS t-statistic for Beta") ///
     ytitle("Density") ///
     legend(order(1 "Simulated t-stat" 2 "Standard Normal") col(1) pos(2) ring(0)) ///
-    xline(-1.96 1.96, lcolor(black) lpattern(dot)) 
+    xline(-1.96 1.96, lcolor(black) lpattern(dot)) name(kdensity_hw5,replace)
+	
+graph export kdensity_hw5.png , name(kdensity_hw5) replace
+
+
 
