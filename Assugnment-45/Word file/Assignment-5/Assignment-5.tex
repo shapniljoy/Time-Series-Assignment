@@ -1,0 +1,102 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+% --- Add these to mimic MS Word ---
+
+% 1. Margins: Sets standard 1-inch margins on all sides
+\usepackage[margin=1in]{geometry} 
+
+% 2. Paragraphs: Removes the first-line indent and adds space between paragraphs
+\usepackage{parskip} 
+
+% 3. Line Spacing: Makes the lines slightly less cramped
+\usepackage{setspace}
+\setstretch{1.15} % 1.15 is MS Word's default. Use \onehalfspacing for 1.5 spacing.
+
+\title{Assignment 5}
+\author{Shapnil Das}
+\begin{document}
+
+\maketitle
+
+\section{Question:}
+
+Simulate $500$ independent Random Walks. Regress the 1st random walk on the other $499$ (one at a time).
+Create a histogram of the $500$ resulting $R^2$ values. What percentage of these regressions yielded a t-statistic greater than $1.96$?
+If these variables are totally unrelated, why isn't that percentage $5\%$?
+
+\section{Solution:}
+
+First, we will use loops to generate 500 Independent Random Walks for 500 different shocks.
+A Random Walk process can be defined as the sum of all current and past shocks.
+These shocks are independent and has a non-decaying effect on the series.
+
+\[y_t = y_{t-1} + \varepsilon_t \]
+
+\[ y_t = \sum_{i=1}^{t} \varepsilon_i \quad \text{for} \; y_0 = 0.\]
+where $\varepsilon_t$ is a white noise error term.
+
+we have generated 500 independent shock $\varepsilon_i \sim \mathcal{N}(0,1)$ for \; $i = 1,2,...,500$.
+And for each shock we have generated 500 independent random walk process $y_t$ for $t = 1,2,...,500$ as the sum of all current and past shocks
+for 100 initial sample or observations $T = 100$.
+
+Now we regress the first random walk $y_1$ on the other 499 random walks
+one at a time and calculate the $R^2$ and $T-statistic$ values for each regression.
+\[ y_1 = \alpha + \beta y_j + u_t \quad \text{for} \; j = 2,3,...,500 \]
+Thus we will have 499 sample statistics which can mimic a Monte-Carlo simulation
+of the distribution of $R^2$ and $T-statistic$ values when the variables are totally unrelated.
+
+Our assumption about the $R^2$ score is as the random walks are independent, theoretically there should be any relation between between $y_1$ and $y_j$ for $j = 2,3,...,500$.
+The expected value of $R^2$ should be close to zero and the expected value of the $T-statistics$ should be significantly close to zero $95\%$ of the time.
+considering the rejection region is 1.96 is in absolute value at 5\% significance level, we should expect to not reject the null hypothesis of no relationship between $y_1$ and $y_j$ for only 5\% of the regressions.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{18pt}
+    \caption{Summary Statistics}
+    \vspace{0.15cm}
+    \begin{tabular}{lrrr}
+        \toprule
+        \textbf{Variable} & \textbf{Obs} & \textbf{Mean} & \textbf{Std. Dev.} \\
+        \midrule
+        Reject            & 499          & $0.731$       & $0.444$            \\
+        $R^2$             & 499          & $0.142$       & $0.126$            \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:summary_stats_booktabs}
+\end{table}
+
+By Investigating the summary statistics we can see contradictions to our expectations.The T-statistics is rejecting the null hypothesis
+of no relationship between $y_1$ and $y_j$ for 73.1\% of the regressions which is much higher than the expected value in 5\% significance level.
+And the $R^2$ values shows the independent random walks explains $14.2\%$ of the variation in the first random walk.
+
+This contradictory results are known as spurious regression.
+
+A standard normal distribution of the shock contains a constant mean and constant variance but the shock of a random walk process follows a constant mean
+and a time dependent infinite variance where $\varepsilon_i \sim \mathcal{N}(\mu,t\sigma^2_i)$. Random walks have a non-decaying effect of all current and past shocks on the series, which can lead to create artificial relations with other
+unrelated random walks.A small shocks can change the trajectory of a random walk but it can never revert to it's original mean and wanders away to new trajectory randomly as time grows.By pure chance, 2 or more random walks can move in the same or opposite direction.So when we regress one on another,
+random walks, the regression can falsely identify the correlation among them as causation or relations.Thus they create an artifical goodness of fit $r^2$ and significant t-statistics which leads to spurious regression results.
+This is one of the core drawbacks of using random walk non-stationary process in Time Series analysis.
+
+\includegraphics[width=\textwidth,scale=1.2]{./histogram_hw5.png}
+
+By plotting the histogram of the $R^2$ values we can see that most of the values are close to zero but there are some outliers which are far from zero and creates a long right skewed tail in the distribution.
+These outliers are the result of spurious regression which creates a significant t-statistics and high values  of $R^2$ even when the variables are totally unrelated.
+
+\includegraphics[width=\textwidth,scale=1.2]{./kdensity_hw5.png}
+
+From the kernel density plot of the T-statitics we can see the contrast comparison of the standard normal distribution of the t-stat
+concentrated around zero and the distribution of the t-statistics from the regressions which is more spread out and presenting an uniform distribution,
+meaning standard significance tests will falsely tell us the variables are related.
+The 2 black dashed line represents the 2 tail rejection area at 5\% significance level at $\pm$1.96. For our empirical distribution of t-statistics,
+we can see that a large portion of the distribution falls outside the rejection area which is the result of spurious regression.
+
+
+
+\end{document}

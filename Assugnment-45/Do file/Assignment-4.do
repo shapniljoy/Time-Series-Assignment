@@ -9,6 +9,9 @@ gen t = _n
 tsset t
 
 set scheme white_tableau
+graph set window fontface "CMU Serif"
+graph set eps fontface "CMU Serif"
+graph set svg fontface "CMU Serif"
 
 * Step-1: Augmented Dicky Fuller Test of 2 variables
 *----------------------------------------------------------------------
@@ -24,8 +27,8 @@ tsline y_drift, ///
 	   subtitle("Random Walk with a drift of 0.2") ///
 	   xtitle("Time Period", size(medlarge)) ///
 	   ytitle("Values", size(medlarge)) ///
-	   ylabel(, labsize(medium)) ///
-	   tlabel(, labsize(medium)) ///
+	   ylabel(, labsize(medium) nogrid) ///
+	   xlabel(, labsize(medium) nogrid) ///
 	   graphregion(color(white)) xsize(8) ysize(4) ///
 	   name(tsplot_hw4_1, replace)
 
@@ -42,20 +45,20 @@ replace u = 0.96*L.u + e in 2/L
 gen double y_trend = 0.2*t + u
 
 
-tsline y_drift, ///
+tsline y_trend, ///
        lcolor(ebblue%70) lwidth(medthick) ///
 	   title("{bf:Time Series Plot}", size(large)) ///
 	   subtitle("AR(1) Deterministic trend of 0.2t with rho = 0.96 ") ///
 	   xtitle("Time Period", size(medlarge)) ///
 	   ytitle("Values", size(medlarge)) ///
-	   ylabel(, labsize(medium)) ///
-	   tlabel(, labsize(medium)) ///
+	   ylabel(, labsize(medium) nogrid) ///
+	   xlabel(, labsize(medium) nogrid) ///
 	   graphregion(color(white)) xsize(8) ysize(4) ///
 	   name(tsplot_hw4_2, replace)
 
 graph export tsplot_hw4_2.png, name(tsplot_hw4_2) replace
 
-
+bb
 varsoc y_trend, maxlag(12)
 dfuller y_trend, trend lags(1)
 
