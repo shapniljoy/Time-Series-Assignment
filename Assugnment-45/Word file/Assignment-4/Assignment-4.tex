@@ -70,8 +70,8 @@ Theoretically, it can be hard to distinguish between a random walk with a drift 
 
 We can see that both the series have an upward trend and it is hard to visually identify which one is a random walk and which one is a stationary process with a deterministic trend.
 So we need to perform an Augmented Dickey-Fuller (ADF) test to identify which one is a random walk and which one is a stationary process.
-First we have to check for the number of lags in each variable. Using the vector autoregression \itshape varsoc command, we can identify the optimal number of lags for each variable.
-The optimal lag is 1. So we run an ADF test with \itshape lags(1).
+First we have to check for the number of lags in each variable. Using the vector autoregression varsoc command, we can identify the optimal number of lags for each variable.
+The optimal lag is 1. So we run an ADF test with lags(1).
 
 
 
@@ -102,23 +102,23 @@ The p-value is $0.2820$ which is greater than $0.05$, which means we fail to rej
 
 
 \begin{table}[H]
-\centering
-\renewcommand{\arraystretch}{1.2} 
-\setlength{\tabcolsep}{12pt}      
-\caption{ADF Test of AR (1) with $\rho = 0.96$ deterministic trend variable}
-\vspace{0.15cm}
-\begin{tabular}{lrrrr}
-\toprule 
-\addlinespace
-         & \textbf{Test} & \multicolumn{3}{c}{\textbf{Dicky Fuller Critical Values}} \\
-         & \textbf{Statistics} & \textbf{1\%} & \textbf{5\%} & \textbf{10\%} \\
-\cmidrule(lr){2-5} 
-$Z(t)$ & $-2.276$ & $-4.024$ & $-3.444$ & $-3.144$ \\
-\bottomrule
-\addlinespace
-\multicolumn{5}{l}{\footnotesize MacKinnon approximate p-value for $Z(t) = 0.4475$.}
-\end{tabular}
-\label{tab:adf_test_ar1_booktabs}
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \setlength{\tabcolsep}{12pt}
+    \caption{ADF Test of AR (1) with $\rho = 0.96$ deterministic trend variable}
+    \vspace{0.15cm}
+    \begin{tabular}{lrrrr}
+        \toprule
+        \addlinespace
+               & \textbf{Test}       & \multicolumn{3}{c}{\textbf{Dicky Fuller Critical Values}}                                \\
+               & \textbf{Statistics} & \textbf{1\%}                                              & \textbf{5\%} & \textbf{10\%} \\
+        \cmidrule(lr){2-5}
+        $Z(t)$ & $-2.276$            & $-4.024$                                                  & $-3.444$     & $-3.144$      \\
+        \bottomrule
+        \addlinespace
+        \multicolumn{5}{l}{\footnotesize MacKinnon approximate p-value for $Z(t) = 0.4475$.}
+    \end{tabular}
+    \label{tab:adf_test_ar1_booktabs}
 \end{table}
 
 
@@ -137,26 +137,26 @@ Then we generate a dummy variable which calculates how many times the ADF test s
 
 
 \begin{table}[H]
-\centering
-\renewcommand{\arraystretch}{1.4} 
-\setlength{\tabcolsep}{18pt} % Generous breathing room    
-\caption{\textsc{Simulation Results:} Percentage of Rejection}
-\vspace{0.15cm}
-% The @{} removes the left and right outer padding for a flush look
-\begin{tabular}{@{} l c c c @{}} 
-\toprule[1.5pt] % Thicker top border for framing
-\textbf{Data Generating Process} & \textbf{Observations} & \textbf{Mean} & \textbf{Std. Dev.} \\
-\midrule
-Random Walk with a drift         & $1000$ & $0.056$ & $0.230$ \\
-Trend Stationary ($\rho = 0.96$) & $1000$ & $0.099$ & $0.298$ \\
-\bottomrule[1.5pt] % Thicker bottom border for framing
-\end{tabular}
-\label{tab:beautiful_sim}
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \setlength{\tabcolsep}{18pt} % Generous breathing room    
+    \caption{\textsc{Simulation Results:} Percentage of Rejection}
+    \vspace{0.15cm}
+    % The @{} removes the left and right outer padding for a flush look
+    \begin{tabular}{@{} l c c c @{}}
+        \toprule[1.5pt] % Thicker top border for framing
+        \textbf{Data Generating Process} & \textbf{Observations} & \textbf{Mean} & \textbf{Std. Dev.} \\
+        \midrule
+        Random Walk with a drift         & $1000$                & $0.056$       & $0.230$            \\
+        Trend Stationary ($\rho = 0.96$) & $1000$                & $0.099$       & $0.298$            \\
+        \bottomrule[1.5pt] % Thicker bottom border for framing
+    \end{tabular}
+    \label{tab:beautiful_sim}
 \end{table}
 
 
 
-For the Random walk process we see that ADF test correctly identifies the unit root process almost $95\%$ times which aligns with the $95\%$ confidence interval at rejection rate is $5\%$.
+For the Random walk process we see that ADF test correctly identifies the unit root process almost $95\%$ times which aligns with the $95\%$ confidence interval at rejection rate $5\%$.
 The Type-1 error of false rejection is only $5.6\%$.
 
 For the stationary deterministic trend process,considering the rejection rate at $5\%$, almost $95\%$ of the time the ADF test should reject the null hypothesis of a unit root.
@@ -170,6 +170,16 @@ From the density plot,
 the pink curve shows the unit root process with $95\%$ confidence interval at t-stat $-3.44$ at the vertical dotted black line.
 The blue curve shows the stationary process with $\rho = 0.96$. Theoretically,the blue curve should fall completely to the left of the rejection area.Any area right to the dotted black line represents the Type-2 error for blue curve
 .But the simulations exposes the huge Type-2 error of the blue curve and the unreliability of the ADF test to identify a stationary process when the process is near unit root process.
+
+
+\includegraphics[width=\textwidth,scale=1.2]{./LLL.png}
+
+The law of large numbers, a statistical property that says if we increase the number of samples, the estimated or simulated distribution will follow the true distribution of the population mean ,can help us to validate the low statistical power of ADF test.
+we have taken 4 different sample sizes of $150, 500,1000,2000$ and simulated each sample $1000$ times to check the Law of large numbers property.
+we can see from the stacked diagram that as we increase the sample from $150$ to $2000$ sequentially, the simulated ditribution moves to the left of the true ditribution resulting in lower Type-2 error
+and higher power of the ADF test. So we can conclude that the ADF test has a low power to identify a stationary process when the process is near unit root process and we need to increase the sample size to increase the power of the ADF test
+. This theory also validates the Monte-Carlo simulation results that we have obtained in this assignment as we have simulated each sample $1000$ times, with increased simulated sample the Monte-Carlo simulation can follow the true distribution of the population mean.
+But in macroeconomics, we often have limited number of small sample that's why it's not easy to identify a stationary process with a deterministic trend when the process is near unit root process and this is why there is a debate in macroeconomics whether a series is a Random Walk or just Very Persistent.
 
 
 \end{document}

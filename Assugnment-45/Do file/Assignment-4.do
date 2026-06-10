@@ -58,7 +58,7 @@ tsline y_trend, ///
 
 graph export tsplot_hw4_2.png, name(tsplot_hw4_2) replace
 
-bb
+
 varsoc y_trend, maxlag(12)
 dfuller y_trend, trend lags(1)
 
@@ -126,4 +126,7 @@ twoway ///
 	       col(1) pos(2) ring(0)) name(hw4_kdensity,replace)
 
 graph export hw4_kdensity.png, name(hw4_kdensity) replace
+
+
+
 
